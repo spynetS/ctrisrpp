@@ -52,6 +52,7 @@ int main() {
             char key = getchar();
             if(key == 'a') currentShape->x--;
             if(key == 'd') currentShape->x++;
+            if(key == 'w') currentShape->rotate();
          }
         if(Game::collides(*currentShape, cubes)){
             for(int i = 0; i < 4;i++){
