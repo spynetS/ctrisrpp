@@ -9,6 +9,10 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <stdio.h>
+#define TIMER 50;
+
+int fallTimer = TIMER;
+
 
 int kbhit(void)
 {
@@ -52,10 +56,15 @@ int main() {
             char key = getchar();
             if(key == 'a') currentShape->x--;
             if(key == 'd') currentShape->x++;
+            if(key == 's') currentShape->y++;
+            if(key == 'w'){
+                currentShape->rotate();
+            }
          }
         if(Game::collides(*currentShape, cubes)){
             for(int i = 0; i < 4;i++){
                 Cube cube = currentShape->cubes[i];
+                cube.graphics = "#";
                 cube.x += currentShape->x;
                 cube.y += currentShape->y;
                 cubes.push_back(cube);
@@ -63,13 +72,16 @@ int main() {
             int random = 1 + (rand() % 7);
             std::cout<<random;
             Shape shape(random);
-            shape.x = currentShape->x+1;
+            shape.x = 4;
             shape.y = 0;
             currentShape = &shape;
-        }else{
-            currentShape->y ++;
+            fallTimer = TIMER;
         }
-        
+        else if(fallTimer == 0) {
+            currentShape->y ++;
+            fallTimer = TIMER;
+        }
+        fallTimer--; 
         //sleep
         using namespace std::chrono_literals;
         std::this_thread::sleep_for(200ms);

@@ -2,11 +2,11 @@
 
 Game::Game(){
     for(int i = 0; i < WIDTH*HEIGHT; i++){
-        pixels[i] = 0;
+        pixels[i] = ". ";
     }
 }
 
-void Game::setPixel(int nx, int ny, int value){
+void Game::setPixel(int nx, int ny, std::string value){
     int x = 0;
     int y = 0;
     for(int i = 0; i < WIDTH*HEIGHT; i++){
@@ -24,10 +24,10 @@ void Game::setPixel(int nx, int ny, int value){
 void Game::update(Shape *shape, std::vector<Cube> &cubes){
     //clear pixels
     for(int i = 0; i<WIDTH*HEIGHT;i++){
-        pixels[i] = 0;
+        pixels[i] = ". ";
     }
     for(Cube cube : cubes){
-        setPixel(cube.x, cube.y, 2);
+        setPixel(cube.x, cube.y, cube.graphics);
     }
     //set shapes pixels
     for(int i = 0; i<4;i++){
@@ -35,23 +35,15 @@ void Game::update(Shape *shape, std::vector<Cube> &cubes){
         int y = shape->y;
         Cube cube = shape->cubes[i];
         
-        setPixel(x+cube.x, y+cube.y, 1);
+        setPixel(x+cube.x, y+cube.y, cube.graphics);
     }
     draw();
 }
 void Game::draw(){
     int x = 0;
     for(int i = 0; i < WIDTH*HEIGHT; i++){
-        int pixel = pixels[i];
-        if(pixel == 0){
-            std::cout << ".";
-        }
-        else if(pixel = 2){
-            std::cout << "@";
-        }
-        else{
-            std::cout << "#";
-        }
+        std::string pixel = pixels[i];
+        std::cout << pixel;
         if(x == WIDTH-1){
             std::cout << "\n";
             x=-1;
@@ -70,7 +62,7 @@ bool Game::collides(Shape shape, std::vector<Cube> &cubes){
                 return true;
             }
         }
-        if(cube.y + shape.y == 10){
+        if(cube.y + shape.y == HEIGHT-1){
             return true;
         }
     }
