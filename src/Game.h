@@ -13,5 +13,7 @@ class Game{
         void update(Shape *shape, std::vector<Cube> &cubes);
         std::string pixels[WIDTH*HEIGHT];
         void setPixel(int x, int y, std::string value);
-        static bool collides(Shape shape, std::vector<Cube> &cubes);
+        static int collides(Shape shape,int x, int y, std::vector<Cube> &cubes);
+        void checkRows(Shape *shape, std::vector<Cube> &cubes);
+        void sleep(int ms);
 };

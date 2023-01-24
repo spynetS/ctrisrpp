@@ -1,5 +1,3 @@
-#include <chrono>
-#include <thread>
 #include "Game.h"
 #include<cstdlib>
 #include <termios.h>
@@ -9,6 +7,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <stdio.h>
+
 #define TIMER 50;
 
 int fallTimer = TIMER;
@@ -51,40 +50,48 @@ int main() {
     currentShape->rotate();
 
     while(true){
+        screen.checkRows(currentShape, cubes);
         screen.update(currentShape, cubes);
          if(kbhit()){
             char key = getchar();
-            if(key == 'a') currentShape->x--;
-            if(key == 'd') currentShape->x++;
-            if(key == 's') currentShape->y++;
+            if(key == 'a' && Game::collides(*currentShape,-1,0, cubes) != 2) currentShape->x--;
+            if(key == 'd' && Game::collides(*currentShape,1,0, cubes) != 2) currentShape->x++;
+            if(key == 's' && Game::collides(*currentShape,0,1, cubes) != 1) currentShape->y++;
             if(key == 'w'){
                 currentShape->rotate();
+                //move the piece from the wall
+                int max = 0;
+                while(Game::collides(*currentShape,0,0,cubes) != 0 && max < 5){
+                    if(currentShape->x > 5){
+                        currentShape->x--;
+                    }
+                    else{
+                        currentShape->x++;
+                    }
+                    max++;
+                }
             }
          }
-        if(Game::collides(*currentShape, cubes)){
+        if(Game::collides(*currentShape,0,1, cubes)==1){
             for(int i = 0; i < 4;i++){
-                Cube cube = currentShape->cubes[i];
-                cube.graphics = "#";
-                cube.x += currentShape->x;
-                cube.y += currentShape->y;
+                Cube cube;
+                cube.x = currentShape->x+currentShape->cubes[i].x;
+                cube.y = currentShape->y+currentShape->cubes[i].y;
                 cubes.push_back(cube);
             }
             int random = 1 + (rand() % 7);
             std::cout<<random;
-            Shape shape(random);
-            shape.x = 4;
-            shape.y = 0;
-            currentShape = &shape;
-            fallTimer = TIMER;
+            Shape *shape = new Shape(random);
+            shape->x = 4;
+            shape->y = 0;
+            currentShape = shape;
         }
-        else if(fallTimer == 0) {
+        if(fallTimer == 0){
             currentShape->y ++;
             fallTimer = TIMER;
         }
-        fallTimer--; 
-        //sleep
-        using namespace std::chrono_literals;
-        std::this_thread::sleep_for(200ms);
+        fallTimer--;
+        
         std::cout << "\n\n";
     }
     return 0;

@@ -1,11 +1,17 @@
 #include "Game.h"
+#include <algorithm>
+#include <chrono>
+#include <thread>
 
 Game::Game(){
     for(int i = 0; i < WIDTH*HEIGHT; i++){
         pixels[i] = ". ";
     }
 }
-
+void Game::sleep(int time){
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(std::chrono::milliseconds(time));
+}
 void Game::setPixel(int nx, int ny, std::string value){
     int x = 0;
     int y = 0;
@@ -30,7 +36,7 @@ void Game::update(Shape *shape, std::vector<Cube> &cubes){
         setPixel(cube.x, cube.y, cube.graphics);
     }
     //set shapes pixels
-    for(int i = 0; i<4;i++){
+    for(int i = 0; i < 4;i++){
         int x = shape->x;
         int y = shape->y;
         Cube cube = shape->cubes[i];
@@ -38,6 +44,7 @@ void Game::update(Shape *shape, std::vector<Cube> &cubes){
         setPixel(x+cube.x, y+cube.y, cube.graphics);
     }
     draw();
+    sleep(20);
 }
 void Game::draw(){
     int x = 0;
@@ -51,21 +58,51 @@ void Game::draw(){
         x++;
     }
 }
-bool Game::collides(Shape shape, std::vector<Cube> &cubes){
-    shape.y++; 
+void Game::checkRows(Shape *shape,std::vector<Cube> &cubes){
+    for(int i = 20; i >= 0; i--){
+        int rowcount = 0;
+        for(Cube cube : cubes){
+            if(cube.y == i){
+                rowcount ++;
+            }
+        }
+        if(rowcount == 10){
+            for(int j = 0; j < cubes.size(); j++){
+                if(cubes[j].y == i){
+                    cubes.erase(cubes.begin()+j);
+                    update(shape, cubes);
+                    sleep(40);
+                    j=0;
+                }
+            }
+            for(int j = 0; j < cubes.size(); j++){
+                if(cubes[j].y < i){
+                    cubes[j].y ++;
+                }
+            }
+            i++;
+        }
+    }
+}
+int Game::collides(Shape shape,int x, int y, std::vector<Cube> &cubes){
+    shape.y+=y; 
+    shape.x+=x; 
     //next pos
     for(int i = 0; i < 4; i++){
         Cube cube = shape.cubes[i];
         for(Cube fallenCube : cubes){
             if(cube.x + shape.x == fallenCube.x &&
-                    cube.y + shape.y == fallenCube.y){
-                return true;
+                cube.y + shape.y == fallenCube.y){
+                return 1;
             }
         }
-        if(cube.y + shape.y == HEIGHT-1){
-            return true;
+        if(cube.y + shape.y == HEIGHT){
+            return 1;
+        }
+        if(cube.x + shape.x > WIDTH-1 || cube.x + shape.x < 0){
+            return 2;
         }
     }
 
-    return false;
+    return 0;
 }
