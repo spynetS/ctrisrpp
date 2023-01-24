@@ -69,7 +69,7 @@ void Game::checkRows(Shape *shape,std::vector<Cube> &cubes){
         if(rowcount == 10){
             for(int j = 0; j < cubes.size(); j++){
                 if(cubes[j].y == i){
-                    cubes.erase(cubes.begin()+j);
+                    cubes[j].y = 100;
                     update(shape, cubes);
                     sleep(40);
                     j=0;
