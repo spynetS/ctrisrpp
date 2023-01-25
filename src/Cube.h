@@ -7,8 +7,8 @@ class Cube{
         Cube(){
             graphics = "██";
         }
-        Cube(int ox,int oy){
-            graphics = "██";
+        Cube(int ox,int oy, std::string color){
+            graphics = color+"";
             x = ox;
             y = oy;
         }

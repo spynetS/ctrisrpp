@@ -74,9 +74,10 @@ int main() {
          }
         if(Game::collides(*currentShape,0,1, cubes)==1){
             for(int i = 0; i < 4;i++){
-                Cube cube;
-                cube.x = currentShape->x+currentShape->cubes[i].x;
-                cube.y = currentShape->y+currentShape->cubes[i].y;
+                Cube cube(currentShape->x+currentShape->cubes[i].x,
+                        currentShape->y+currentShape->cubes[i].y,
+                        currentShape->cubes[i].graphics);
+
                 cubes.push_back(cube);
             }
             int random = 1 + (rand() % 7);
