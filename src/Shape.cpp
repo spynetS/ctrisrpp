@@ -2,6 +2,7 @@
 #include <iostream>
 
 Shape::Shape(int type){
+    this->type = type;
     //i
     if(type == 1){
         cubes[0] = Cube(0,2 , "\u001b[36m██\u001b[0m");

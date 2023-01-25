@@ -35,14 +35,20 @@ void Game::update(Shape *shape, std::vector<Cube> &cubes){
     for(Cube cube : cubes){
         setPixel(cube.x, cube.y, cube.graphics);
     }
+    Shape preview = getPreview(*shape, cubes);
     //set shapes pixels
     for(int i = 0; i < 4;i++){
         int x = shape->x;
         int y = shape->y;
         Cube cube = shape->cubes[i];
-        
         setPixel(x+cube.x, y+cube.y, cube.graphics);
+
+        int px = preview.x;
+        int py = preview.y;
+        Cube pcube = preview.cubes[i];
+        setPixel(px+pcube.x, py+pcube.y, cube.graphics);
     }
+
     draw();
     sleep(20);
 }
@@ -84,6 +90,23 @@ void Game::checkRows(Shape *shape,std::vector<Cube> &cubes){
         }
     }
 }
+Shape Game::getPreview(Shape currentShape, std::vector<Cube> cubes){
+    Shape shape(currentShape.type);
+    shape.x = currentShape.x;
+    shape.cubes[0] = currentShape.cubes[0];
+    shape.cubes[1] = currentShape.cubes[1];
+    shape.cubes[2] = currentShape.cubes[2];
+    shape.cubes[3] = currentShape.cubes[3];
+
+    for(int i = 20; i >= 0; i--){
+        shape.y = i;
+        if(!collides(shape, 0,0,cubes)){
+            return shape;
+        }
+    }
+    return shape;
+}
+
 int Game::collides(Shape shape,int x, int y, std::vector<Cube> &cubes){
     shape.y+=y; 
     shape.x+=x; 

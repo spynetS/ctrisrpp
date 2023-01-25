@@ -16,4 +16,5 @@ class Game{
         static int collides(Shape shape,int x, int y, std::vector<Cube> &cubes);
         void checkRows(Shape *shape, std::vector<Cube> &cubes);
         void sleep(int ms);
+        Shape getPreview(Shape currentShape, std::vector<Cube> cubes);
 };

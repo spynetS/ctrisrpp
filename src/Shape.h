@@ -2,6 +2,7 @@
 
 class Shape{
     public:
+        int type;
         Shape(int type);
         int x,y;
         Cube cubes[4];
