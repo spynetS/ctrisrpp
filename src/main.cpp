@@ -42,10 +42,10 @@ int kbhit(void)
 
 int main() {
     Game screen = Game();
-    Shape firstShape(7);
-    firstShape.x = 4;
-    firstShape.y = 0;
-    Shape *currentShape = &firstShape;
+    Shape *firstShape = new Shape(7);
+    firstShape->x = 4;
+    firstShape->y = 0;
+    Shape *currentShape = firstShape;
 
     std::vector<Cube> cubes;
     currentShape->rotate();
@@ -90,6 +90,7 @@ int main() {
             Shape *shape = new Shape(random);
             shape->x = 4;
             shape->y = 0;
+            delete currentShape;
             currentShape = shape;
         }
         if(fallTimer == 0){
