@@ -39,10 +39,11 @@ int kbhit(void)
   
   return 0;
 }
+
 int main() {
     Game screen = Game();
     Shape firstShape(7);
-    firstShape.x = 3;
+    firstShape.x = 4;
     firstShape.y = 0;
     Shape *currentShape = &firstShape;
 
@@ -76,6 +77,7 @@ int main() {
             for(int i = 0; i < 4;i++){
                 Cube cube(currentShape->x+currentShape->cubes[i].x,
                         currentShape->y+currentShape->cubes[i].y,
+                        currentShape->cubes[i].color,
                         currentShape->cubes[i].graphics);
 
                 cubes.push_back(cube);

@@ -2,10 +2,11 @@
 #include <algorithm>
 #include <chrono>
 #include <thread>
+#include <stdlib.h>
 
 Game::Game(){
     for(int i = 0; i < WIDTH*HEIGHT; i++){
-        pixels[i] = ". ";
+        pixels[i] = BG;
     }
 }
 void Game::sleep(int time){
@@ -17,7 +18,7 @@ void Game::setPixel(int nx, int ny, std::string value){
     int y = 0;
     for(int i = 0; i < WIDTH*HEIGHT; i++){
         if(nx == x && ny == y){
-            pixels[i] = value;
+            pixels[i] = value+"\u001b[0m";
         }
 
         if(x == WIDTH-1){
@@ -28,12 +29,13 @@ void Game::setPixel(int nx, int ny, std::string value){
     }
 }
 void Game::update(Shape *shape, std::vector<Cube> &cubes){
-    //clear pixels
+    system ("clear");
+    //clear pixel,s
     for(int i = 0; i<WIDTH*HEIGHT;i++){
-        pixels[i] = ". ";
+        pixels[i] = BG;
     }
     for(Cube cube : cubes){
-        setPixel(cube.x, cube.y, cube.graphics);
+        setPixel(cube.x, cube.y, cube.color + cube.graphics);
     }
     Shape preview = getPreview(*shape, cubes);
     //set shapes pixels
@@ -41,12 +43,12 @@ void Game::update(Shape *shape, std::vector<Cube> &cubes){
         int x = shape->x;
         int y = shape->y;
         Cube cube = shape->cubes[i];
-        setPixel(x+cube.x, y+cube.y, cube.graphics);
+        setPixel(x+cube.x, y+cube.y, cube.color + cube.graphics);
 
         int px = preview.x;
         int py = preview.y;
         Cube pcube = preview.cubes[i];
-        setPixel(px+pcube.x, py+pcube.y, cube.graphics);
+        setPixel(px+pcube.x, py+pcube.y, pcube.color + pcube.graphics);
     }
 
     draw();
@@ -77,7 +79,7 @@ void Game::checkRows(Shape *shape,std::vector<Cube> &cubes){
                 if(cubes[j].y == i){
                     cubes[j].y = 100;
                     update(shape, cubes);
-                    sleep(40);
+                    sleep(20);
                     j=0;
                 }
             }
@@ -97,10 +99,14 @@ Shape Game::getPreview(Shape currentShape, std::vector<Cube> cubes){
     shape.cubes[1] = currentShape.cubes[1];
     shape.cubes[2] = currentShape.cubes[2];
     shape.cubes[3] = currentShape.cubes[3];
+    shape.cubes[0].graphics = "[]";
+    shape.cubes[1].graphics = "[]";
+    shape.cubes[2].graphics = "[]";
+    shape.cubes[3].graphics = "[]";
 
-    for(int i = 20; i >= 0; i--){
+    for(int i = 0; i < 20; i++){
         shape.y = i;
-        if(!collides(shape, 0,0,cubes)){
+        if(collides(shape, 0,1,cubes)){
             return shape;
         }
     }

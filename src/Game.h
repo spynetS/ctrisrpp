@@ -6,8 +6,10 @@
 #include <iostream>
 #include <string>
 
+
 class Game{
     public:
+        std::string BG = ". ";
         Game();
         void draw();
         void update(Shape *shape, std::vector<Cube> &cubes);
