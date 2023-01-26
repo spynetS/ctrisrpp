@@ -58,6 +58,9 @@ int main() {
             if(key == 'a' && Game::collides(*currentShape,-1,0, cubes) != 1) currentShape->x--;
             if(key == 'd' && Game::collides(*currentShape,1,0, cubes) != 1) currentShape->x++;
             if(key == 's' && Game::collides(*currentShape,0,1, cubes) != 1) currentShape->y++;
+            if(key == ' '){
+                currentShape->y = screen.getPreview(*currentShape, cubes).y;
+            }
             if(key == 'w'){
                 currentShape->rotate();
                 //move the piece from the wall
