@@ -55,8 +55,8 @@ int main() {
         screen.update(currentShape, cubes);
          if(kbhit()){
             char key = getchar();
-            if(key == 'a' && Game::collides(*currentShape,-1,0, cubes) != 2) currentShape->x--;
-            if(key == 'd' && Game::collides(*currentShape,1,0, cubes) != 2) currentShape->x++;
+            if(key == 'a' && Game::collides(*currentShape,-1,0, cubes) != 1) currentShape->x--;
+            if(key == 'd' && Game::collides(*currentShape,1,0, cubes) != 1) currentShape->x++;
             if(key == 's' && Game::collides(*currentShape,0,1, cubes) != 1) currentShape->y++;
             if(key == 'w'){
                 currentShape->rotate();
